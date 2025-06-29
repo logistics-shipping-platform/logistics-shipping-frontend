@@ -10,10 +10,11 @@ import CreateShipment from './pages/create-shipment/CreateShipmnet';
 function App() {
   return (
     <Routes>
+      {/* Rutas Públicas */}
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
 
-
+      {/* Rutas Protegidas */}
        <Route path="/" element={<ProtectedRoute><MainLayout /></ProtectedRoute>}>
         <Route index element={<RequestQuote />} />
         <Route path="request-quote" element={<RequestQuote />} />
