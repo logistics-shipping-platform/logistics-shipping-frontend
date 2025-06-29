@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
-import api from '../../services/api';
+import { signUpUser } from '../../services/authService';
 
 import { Avatar, Button, TextField, Link, Grid, Box, Typography, Container, Select, MenuItem, FormControl, InputLabel } from '@material-ui/core';
 import AccountCircle from '@material-ui/icons/AccountCircle';
@@ -20,9 +20,19 @@ export default function Register() {
     const navigate = useNavigate();
     const { enqueueSnackbar } = useSnackbar();
 
+    /* 
+    *  Función que maneja el envío del formulario de registro.
+     * Realiza una llamada al API para registrar un nuevo usuario con los valores proporcionados.
+     * Si el registro es exitoso, muestra un mensaje de éxito y redirige al usuario a la página de inicio de sesión.
+     * Si ocurre un error, muestra un mensaje de error.
+     */
     const handleSubmit = async (values, { setSubmitting, setErrors }) => {
         try {
-            await api.post('/auth/register', values);
+
+            // Llamada al API para registrar un nuevo usuario
+            await signUpUser(values);
+
+            // Mostrar mensaje de éxito y redirigir al usuario a la página de inicio de sesión
             enqueueSnackbar('Registro exitoso', { variant: 'success' });
             navigate('/login');
         } catch (err) {

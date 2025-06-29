@@ -14,6 +14,7 @@ import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
+import { loginUser } from '../../services/authService';
 
 const validationSchema = Yup.object({
   email: Yup.string().email('Por favor ingresa tu correo').required('Por favor ingresa tu correo'),
@@ -24,12 +25,17 @@ export default function Login() {
   const navigate = useNavigate();
   const { login } = useContext(AuthContext);
 
+  /* 
+  * Función que reazliza el intento de inicio de sesión con las credenciales proporcionadas.
+  */
   const handleSubmit = async (values, { setSubmitting, setErrors }) => {
     try {
-      const response = await api.post('/auth/login', values);
-      const { token } = response.data;
-      localStorage.setItem('authToken', token);
+
+      // Llamada al API para realizar el intento de inicio de sesión
+      const token = await loginUser(values);
       login(token);
+
+      // Redirigir al usuario a la página principal después de iniciar sesión
       navigate('/');
     } catch (err) {
       setErrors({ submit: err.response?.data?.message || 'Error al iniciar sesión' });
