@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import {
     Container,
@@ -10,7 +10,9 @@ import {
     Box
 } from '@material-ui/core';
 import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
+import { useSnackbar } from 'notistack';
 import { ShipmentContext } from '../../context/ShipmentContext';
+import { createShipment } from '../../services/shipment';
 
 const useStyles = makeStyles(theme => ({
     root: { padding: theme.spacing(4, 0) },
@@ -37,22 +39,51 @@ const useStyles = makeStyles(theme => ({
 export default function CreateShipment() {
     const classes = useStyles();
     const navigate = useNavigate();
-    const { calculatedShipmentData, cities } = useContext(ShipmentContext);
+    const { enqueueSnackbar } = useSnackbar();
 
+    const { calculatedShipmentData, cities, updateSelectedShipment } = useContext(ShipmentContext);
+
+    useEffect(() => {
+        // Verifica si los datos del envío calculado y las ciudades están disponibles
+        if (calculatedShipmentData === null || cities.length === 0) {
+            navigate('/');
+        }
+    }, []);
+    
+    //Formatea la fecha a un valor legible y con el formato de Colombia
     const formattedDate = calculatedShipmentData?.requestDate
         ? new Date(calculatedShipmentData.requestDate).toLocaleDateString('es-CO', {
             day: 'numeric', month: 'long', year: 'numeric'
         })
         : '-';
 
+    //Formatea el costo del envío a un valor legible y con el formato de Colombia
     const formattedCost = calculatedShipmentData?.price
         ? new Intl.NumberFormat('es-CO', {
             style: 'currency', currency: 'COP', minimumFractionDigits: 0
         }).format(calculatedShipmentData.price)
         : '-';
 
+    //Obtiene el nombre de la ciudad de origen y destino a partir del id
     const originCity = cities.find(city => city.id === calculatedShipmentData?.originId)?.name || '-'
     const destinationCity = cities.find(city => city.id === calculatedShipmentData?.destinationId)?.name || '-';
+
+    const createShipmentAttempt = async () => {
+        console.log("Llamando a createShipmentAttempt con los valores:", calculatedShipmentData);
+        try {
+            //Envia los datos del paquete junto con la cotización para crear el envío
+            const resultCreateshipment = await createShipment(calculatedShipmentData);
+            console.log('Creacion exitosa:', resultCreateshipment);
+
+            // Si el envío es creado exitosamente, actualiza el contexto y redirige al usuario al detalle del envío
+            updateSelectedShipment(resultCreateshipment)
+            navigate('/');
+
+            enqueueSnackbar('Envío creado exitosamente', { variant: 'success' });
+        } catch (err) {
+            enqueueSnackbar('Error al calcular la cotización, por favor intentalo nuevamente', { variant: 'error' });
+        }
+    };
 
     return (
         <Container maxWidth="sm" className={classes.root}>
@@ -146,7 +177,7 @@ export default function CreateShipment() {
                     variant="contained"
                     className={classes.containedBtn}
                     onClick={() => {
-                        // TODO: crear envío
+                        createShipmentAttempt();
                     }}
                 >
                     Solicitar Recogida

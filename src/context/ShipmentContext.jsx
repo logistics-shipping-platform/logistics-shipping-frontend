@@ -4,12 +4,12 @@ export const ShipmentContext = createContext();
 
 export const ShipmentProvider = ({ children }) => {
 
-  const [shipmentData, setShipmentData] = useState(null);
+  const [selectedShipment, setSelectedShipment] = useState(null);
   const [calculatedShipmentData, setCalculatedShipmentData] = useState(null);
   const [cities, setCities] = useState([]);
 
-  const updateShipment = (data) => {
-    setShipmentData(data);
+  const updateSelectedShipment = (data) => {
+    setSelectedShipment(data);
   };
 
   const updateCalculatedShipment = (data) => {
@@ -23,9 +23,9 @@ export const ShipmentProvider = ({ children }) => {
   return (
     <ShipmentContext.Provider value={{
       calculatedShipmentData,
-      shipmentData,
+      selectedShipment,
       cities,
-      updateShipment,
+      updateSelectedShipment,
       updateCalculatedShipment,
       updateCities
     }}>
