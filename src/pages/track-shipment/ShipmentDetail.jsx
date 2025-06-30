@@ -14,8 +14,9 @@ import {
     CircularProgress,
     makeStyles
 } from '@material-ui/core';
-import { getShipmentById } from '../../services/shipment';
+import { getShipmentById } from '../../services/shipmentService';
 import { ShipmentContext } from '../../context/ShipmentContext';
+import { subscribeToChannel, unsubscribeFromChannel } from '../../services/socketService';
 
 const useStyles = makeStyles(theme => ({
     sectionTitle: {
@@ -50,17 +51,36 @@ export default function ShipmentDetail() {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        async function fetchData() {
-            try {
-                const data = await getShipmentById(id);
-                setShipment(data);
-            } catch (err) {
-                console.error(err);
-            } finally {
-                setLoading(false);
-            }
+        
+        let handleUpdate;
+        try {
+            getShipmentById(id).then(setShipment);
+
+            // Suscribirse al canal de actualizaciones del envío
+            const channel = `shipments.${id}`;
+            handleUpdate = (data) => {
+                //Refrescar el estado del envío con los datos recibidos
+                setShipment(prev => ({
+                    ...prev,
+                    state: data.newState,
+                    stateHistory: [...prev.stateHistory, {
+                        state: data.newState,
+                        changedAt: new Date(data.changedAt)
+                    }]
+                }));
+            };
+            subscribeToChannel(channel, handleUpdate);
+
+        } catch (err) {
+            console.error(err);
+        } finally {
+            setLoading(false);
         }
-        fetchData();
+
+        // Limpiar la suscripción al canal al desmontar el componente
+        return () => {
+            unsubscribeFromChannel(handleUpdate);
+        };
     }, [id]);
 
     if (loading) return <CircularProgress />;
