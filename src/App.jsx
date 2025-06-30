@@ -6,6 +6,8 @@ import Register from './pages/register/Register';
 import ProtectedRoute from './routes/ProtectedRoute';
 import RequestQuote from './pages/request-quote/RequestQuote';
 import CreateShipment from './pages/create-shipment/CreateShipmnet';
+import ShipmentList from './pages/track-shipment/ShipmentList';
+import ShipmentDetail from './pages/track-shipment/ShipmentDetail';
 
 function App() {
   return (
@@ -19,7 +21,9 @@ function App() {
         <Route index element={<RequestQuote />} />
         <Route path="request-quote" element={<RequestQuote />} />
         <Route path="create-shipment" element={<CreateShipment />} />
-      </Route> 
+        <Route path="track-shipment" element={<ShipmentList />} />
+        <Route path="track-shipment/:id" element={<ShipmentDetail />} />
+      </Route>
 
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>

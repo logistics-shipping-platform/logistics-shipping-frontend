@@ -16,3 +16,22 @@ export async function createShipment(data) {
         throw error;
     }
 }
+
+
+export async function getShipmentList(page = 0, count = 10) {
+    try {
+        const response = await api.get(`/shipments?page=${page}&count=${count}`);
+        return response.data;
+    } catch (error) {
+        throw error;
+    }
+}
+
+export async function getShipmentById(id) {
+    try {
+        const response = await api.get(`/shipments/${id}`);
+        return response.data;
+    } catch (error) {
+        throw error;
+    }
+}
