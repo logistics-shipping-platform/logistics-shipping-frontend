@@ -34,7 +34,7 @@ export default function MainLayout() {
             Logistics Shipping
           </Typography>
           <Button color="inherit" component={Link} to="/request-quote">Cotización</Button>
-          <Button color="inherit" component={Link} to="/tracking">Seguimiento</Button>
+          <Button color="inherit" component={Link} to="/track-shipment">Seguimiento</Button>
           <Button color="inherit" onClick={handleLogout}>Salir</Button>
         </Toolbar>
       </AppBar>
