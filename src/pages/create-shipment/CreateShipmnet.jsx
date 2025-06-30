@@ -12,7 +12,7 @@ import {
 import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
 import { useSnackbar } from 'notistack';
 import { ShipmentContext } from '../../context/ShipmentContext';
-import { createShipment } from '../../services/shipment';
+import { createShipment } from '../../services/shipmentService';
 
 const useStyles = makeStyles(theme => ({
     root: { padding: theme.spacing(4, 0) },

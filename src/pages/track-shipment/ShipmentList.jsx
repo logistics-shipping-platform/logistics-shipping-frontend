@@ -14,7 +14,7 @@ import {
     Typography
 } from '@material-ui/core';
 import { useNavigate } from 'react-router-dom';
-import { getShipmentList } from '../../services/shipment';
+import { getShipmentList } from '../../services/shipmentService';
 import { ShipmentContext } from '../../context/ShipmentContext';
 
 const useStyles = makeStyles(theme => ({
