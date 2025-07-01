@@ -77,7 +77,7 @@ export default function CreateShipment() {
 
             // Si el envío es creado exitosamente, actualiza el contexto y redirige al usuario al detalle del envío
             updateSelectedShipment(resultCreateshipment)
-            navigate('/');
+            navigate('/track-shipment/' + resultCreateshipment.shipmentId);
 
             enqueueSnackbar('Envío creado exitosamente', { variant: 'success' });
         } catch (err) {
