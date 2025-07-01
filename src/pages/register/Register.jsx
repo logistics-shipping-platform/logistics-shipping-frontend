@@ -11,6 +11,9 @@ import AccountCircle from '@material-ui/icons/AccountCircle';
 const validationSchema = Yup.object({
     email: Yup.string().email('Correo inválido').max(255, 'El correo es demasiado largo').required('El correo es obligatorio'),
     password: Yup.string().min(8, 'Debe tener al menos 8 caracteres').required('La contraseña es obligatoria'),
+    confirmPassword: Yup.string()
+        .oneOf([Yup.ref('password'), null], 'Las contraseñas deben coincidir')
+        .required('La confirmación de contraseña es obligatoria'),
     fullName: Yup.string().max(255, 'El nombre completo es demasiado largo').required('El nombre completo es obligatorio'),
     documentType: Yup.string().oneOf(['CC', 'CE', 'PASSPORT'], 'El tipo de documento es obligatorio').required('El tipo de documento es obligatorio'),
     document: Yup.string().max(255, 'El número de documento es demasiado largo').required('El número de documento es obligatorio'),
@@ -86,6 +89,23 @@ export default function Register() {
                                 error={touched.password && Boolean(errors.password)}
                                 helperText={touched.password && errors.password}
                             />
+
+                            <TextField
+                                variant="outlined"
+                                margin="normal"
+                                fullWidth
+                                name="confirmPassword"
+                                label="Confirmar Contraseña"
+                                type="password"
+                                id="confirmPassword"
+                                autoComplete="new-password"
+                                value={values.confirmPassword}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                error={touched.confirmPassword && Boolean(errors.confirmPassword)}
+                                helperText={touched.confirmPassword && errors.confirmPassword}
+                            />
+
                             <TextField
                                 variant="outlined"
                                 margin="normal"
